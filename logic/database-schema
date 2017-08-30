@@ -1,0 +1,37 @@
+USER TABLE
+
+| USER_UUID | HANDLE | PFP_URL | DISPLAY_NAME |
++-----------+--------+---------+--------------+
+| 0XDEADBEE | @Keith | /kthpfp | Keith Stelly |
+
+TWEET TABLE
+
+| USER_UUID | TWEET_UUID | CONTENT | TIMESTAMP |
++-----------+------------+---------+-----------+
+
+TAG_TWEET TABLE
+
+| TAG_UUID | TWEET_UUID |
+|----------+------------|
+
+TAG TABLE
+
+| TAG_UUID | FIELD ( varchar(max_tweet_length - 1) |
+|----------+---------------------------------------|
+
+Adding a new tweet:
+    User             : `user'
+	New latest tweet : `nt'
+
+    1. Get previous tweet, by looking up with `Uid' in the USER_TABLE, previous tweet: `ot'
+	2. Add new tweet row in TWEET_TABLE:
+	    USER_UUID = user.id
+		TWEET_UUID = nt.id
+		CONTENT = nt.content
+		NEW_TWEET = NULL
+		OLD_TWEET = ot.id
+	3. Update ot.db_row:
+	    NEW_TWEET = nt.id
+	4. Update user.db_row:
+	    LATEST_TWEET = nt.id
+	5. commit

@@ -1,0 +1,63 @@
+# sqlite3 is for debugging only
+# its UUID's are only 64 bits instead of 128 bits like they ought to be
+# typically will store connection object in .connection if relevant for db type
+
+import json
+import sqlite3
+
+from shared import uuid as shared_uuid
+
+
+class KWDB:
+    # future: postgres
+    # 0th index is default
+    DB_TYPES = ['sqlite3']
+    CONNECTOR_FUNCTIONS = {'sqlite3' : sqlite3.connect}
+
+    def __init__(self, base_dir, db_filename, db_type=DB_TYPES[0]):
+        self.db_type = db_type
+
+        if not base_dir.endswith('/'):
+            base_dir += '/'
+        self.base_dir = base_dir
+        self.__Connect = KWDB.CONNECTOR_FUNCTIONS[db_type]
+        self.db_filename = db_filename
+
+
+    def get_new_default_db(directory):
+        return KWDB(directory)
+
+
+    # returns json blob string
+    def serialize(self):
+        serialization = {}
+        serialization['db_type'] = str(self.db_type)
+        serialization['db_filepath'] = str(self.db_filepath())
+        serialization['base_dir'] = str(self.base_dir)
+        serialization['db_filename'] = str(self.db_filename)
+        return json.dumps(serialization)
+
+    def deserialize(directory):
+        blobstr = open(directory + 'metadata.json', 'r').read()
+        blob = json.loads(blobstr)
+        return KWDB(base_dir=blob['base_dir'], db_filename=blob['db_filename'], db_type=blob['db_type'])
+
+    def db_filepath(self):
+        return self.base_dir + self.db_filename
+
+    # None to use default ID generation
+    def get_id(self, clazz=None):
+        if self.db_type == 'sqlite3':
+            return int(shared_uuid.new_uuid()) % 2**32-1
+        raise Exception
+
+    def cursor(self):
+        return self.connection.cursor()
+
+    # If the object does not already have an ID, this will generate an ID.
+    def add(self, item):
+        item.__dbadd__(self)
+
+    def adds(self, items):
+        for item in items:
+            self.add(item)
