@@ -79,7 +79,5 @@ class KwitterConsole(Cmd):
         except:
             print(sys.exc_info())
 
-
-
 if __name__ == '__main__':
     KwitterConsole(kwdb_helper.prompt_for_db()).cmdloop('Kwitter Console')

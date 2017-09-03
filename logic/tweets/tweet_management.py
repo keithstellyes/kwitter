@@ -37,7 +37,7 @@ def add_tweet_sqlite3(kwdb, tweet_):
     for tag_field in tags:
         tag = tag_module.Tag(field=tag_field)
         kwdb.add(tag)
-        kwdb.add(tagtweet.TagTweet(tag_id=tag.tag_id, tweet_id=self.tweet_id))
+        kwdb.add(tagtweet.TagTweet(tag_id=tag.tag_id, tweet_id=tweet_.tweet_id))
     conn.commit()
 
 def get_content_from_tweet_id(tweet_id, kwdb):
