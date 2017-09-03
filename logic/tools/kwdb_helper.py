@@ -26,6 +26,9 @@ def connection(kwdb):
 
 def prompt_for_db():
     db_directory = input('Base DB directory:').strip().rstrip('/') + '/'
+    if db_directory == '/':
+        print("Okay, let's generate a new database instead.")
+        import generate_new_db
     kwdb = kw_database.KWDB.deserialize(db_directory)
     conn = connection(kwdb)
     kwdb.connection = conn
