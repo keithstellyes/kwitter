@@ -1,3 +1,5 @@
+# DEPRECATED use the admin console instead.
+
 import time
 
 import kwdb_helper
@@ -6,6 +8,8 @@ from tweets.tweet import Tweet
 from users import user_management
 
 from tags import tag_management
+
+print('DEPRECATED use the admin console instead.')
 
 db = kwdb_helper.prompt_for_db()
 kwdb = db

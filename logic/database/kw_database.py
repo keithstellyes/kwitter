@@ -29,6 +29,7 @@ class KWDB:
 
 
     # returns json blob string
+    # todo rename to "metadata_serialize
     def serialize(self):
         serialization = {}
         serialization['db_type'] = str(self.db_type)
@@ -37,6 +38,7 @@ class KWDB:
         serialization['db_filename'] = str(self.db_filename)
         return json.dumps(serialization)
 
+    # todo rename to metadata_deserialize
     def deserialize(directory):
         blobstr = open(directory + 'metadata.json', 'r').read()
         blob = json.loads(blobstr)

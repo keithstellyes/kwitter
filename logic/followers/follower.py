@@ -2,9 +2,11 @@ from database.unsupported_db_type_exception import UnsupportedDBTypeException
 from followers import follower_management
 
 class Follower:
-    def __init__(self, follower_id, followee_id):
+    def __init__(self, follower_id=None, followee_id=None, follower_handle=None, followee_handle=None):
         self.follower_id = follower_id
         self.followee_id = followee_id
+        self.followee_handle = followee_handle
+        self.follower_handle = follower_handle
 
     def build_from_row(row, kwdb):
         if kwdb.db_type == 'sqlite3':
