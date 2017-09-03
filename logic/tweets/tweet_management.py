@@ -3,6 +3,8 @@ import time
 from tags import tag as tag_module
 from tags import tag_management
 from tweets import tweet
+from users import user_management
+from shared import tagtweet
 
 from database.unsupported_db_type_exception import UnsupportedDBTypeException
 
@@ -15,9 +17,13 @@ def add_tweet_auto(kwdb, tweet_):
 
 def add_tweet_sqlite3(kwdb, tweet_):
     conn = kwdb.connection
-    if tweet_.tweet_id == None:
+    if tweet_.tweet_id is None:
         tweet_.tweet_id = kwdb.get_id(tweet.Tweet)
     user_id = tweet_.user_id
+
+    if user_id is None and tweet_.user_handle is not None:
+        user_id = user_management.get_id_from_username(kwdb, tweet_.user_handle)
+
     tweet_id = tweet_.tweet_id
     timestamp = int(time.time())
     content = tweet_.content
@@ -29,8 +35,9 @@ def add_tweet_sqlite3(kwdb, tweet_):
 
     tags = tag_management.scan_tags_from_string(content)
     for tag_field in tags:
-        if tag_management.get_tag_id(tag_field, kwdb) is None:
-            kwdb.add(tag_module.Tag(field=tag_field))
+        tag = tag_module.Tag(field=tag_field)
+        kwdb.add(tag)
+        kwdb.add(tagtweet.TagTweet(tag_id=tag.tag_id, tweet_id=self.tweet_id))
     conn.commit()
 
 def get_content_from_tweet_id(tweet_id, kwdb):

@@ -17,7 +17,7 @@ select HANDLE,CONTENT,TIMESTAMP from (
 -- get the ID's of all followers
         select FOLLOWEE_ID from FOLLOWERS where FOLLOWER_ID=?
     ) inner join USERS on USERS.USER_ID=FOLLOWEE_ID
-) inner join TWEETS on FOLLOWEE_ID=TWEETS.USER_ID;'''
+) inner join TWEETS on FOLLOWEE_ID=TWEETS.USER_ID order by TIMESTAMP desc;'''
     cursor = kwdb.cursor()
     cursor.execute(query, (int(user_id),))
     rows = cursor.fetchall()

@@ -2,6 +2,7 @@ from tweets import tweet_management
 from shared import tagtweet
 from tags import tag_management
 from tags import tag as tag_module
+from users import user_management
 
 class Tweet:
     def __init__(self, user_id=None, content=None, timestamp=None, tweet_id=None, user_handle=None):
@@ -46,5 +47,3 @@ class Tweet:
 
     def __dbadd__(self, kwdb):
         tweet_management.add_tweet_auto(kwdb, self)
-        for tag in self.tags:
-            kwdb.add(tag)
