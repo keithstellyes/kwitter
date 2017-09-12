@@ -63,7 +63,7 @@ class KwitterConsole(Cmd):
         try:
             args = shlex.split(arg)
             valid_opts = ['tweet', 'user']
-            if len(args) == 0:
+            if len(args) == 0 or args[0] not in valid_opts:
                 print('`add\' needs an argument')
                 print('one-of:\n' + '\n'.join(valid_opts))
             elif args[0] == 'tweet':
@@ -78,6 +78,15 @@ class KwitterConsole(Cmd):
                                                   handle=parsed['handle']))
         except:
             print(sys.exc_info())
+    def do_db(self, arg):
+        args = shlex.split(arg)
+        valid_opts = ['generate']
+        if len(args) == 0 or args[0] not in valid_opts:
+            print('`db\' needs an argument')
+            print('one-of:\n' + '\n'.join(valid_opts))
+        elif args[0] == 'generate':
+            print('Ok, let\'s generate a DB for you')
+            import generate_new_db
 
 if __name__ == '__main__':
     KwitterConsole(kwdb_helper.prompt_for_db()).cmdloop('Kwitter Console')
