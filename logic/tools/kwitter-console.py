@@ -50,6 +50,8 @@ add_user_parser = argparse.ArgumentParser(description='Add a user', prog='add us
 add_user_parser.add_argument('-user_id')
 add_user_parser.add_argument('-handle')
 
+get_tweet_parser = argparse.ArgumentParser(description='Get tweets', prog='get tweet')
+
 class KwitterConsole(Cmd):
     def __init__(self, kwdb):
         super(KwitterConsole, self).__init__()
@@ -76,17 +78,48 @@ class KwitterConsole(Cmd):
                 parsed = vars(add_user_parser.parse_args(args=args[1:]))
                 self.kwdb.add(tweeter_user.TweeterUser(user_id=parsed['user_id'],
                                                   handle=parsed['handle']))
+            else:
+                print('Unrecognized option for `add\': ' + args[0])
+        except:
+            print(sys.exc_info())
+
+    def do_get(self, arg):
+        try:
+            args = shlex.split(arg)
+            valid_opts = ['tweet']
+
+            if len(args) == 0 or args[0] not in valid_opts:
+                print('`get\' needs an argument')
+                print('one-of:\n' + '\n'.join(valid_opts))
+            elif args[0] == 'tweet':
+                from shared.get_all import get_all_tweets
+                from datetime import datetime
+                from users.user_management import get_username_from_id
+                tweets = get_all_tweets(self.kwdb)
+                for tweet in tweets:
+                    tweet.user_handle = get_username_from_id(kwdb=self.kwdb, id=tweet.user_id)
+                    print('"{content}" \n-{user_handle} @{timestamp}'.format(content=tweet.content,
+                                                                             user_handle=tweet.user_handle,
+                                                                             timestamp=datetime.fromtimestamp(
+                                                                             tweet.timestamp)))
+            else:
+                print('Unrecognized option for `get\': ' + args[0])
         except:
             print(sys.exc_info())
     def do_db(self, arg):
-        args = shlex.split(arg)
-        valid_opts = ['generate']
-        if len(args) == 0 or args[0] not in valid_opts:
-            print('`db\' needs an argument')
-            print('one-of:\n' + '\n'.join(valid_opts))
-        elif args[0] == 'generate':
-            print('Ok, let\'s generate a DB for you')
-            import generate_new_db
+        try:
+            args = shlex.split(arg)
+            valid_opts = ['generate']
+            if len(args) == 0 or args[0] not in valid_opts:
+                print('`db\' needs an argument')
+                print('one-of:\n' + '\n'.join(valid_opts))
+            elif args[0] == 'generate':
+                print('Ok, let\'s generate a DB for you')
+                import generate_new_db
+            else:
+                print('Unrecognized option for `db\': ' + args[0])
+        except:
+            print(sys.exc_info())
 
 if __name__ == '__main__':
     KwitterConsole(kwdb_helper.prompt_for_db()).cmdloop('Kwitter Console')
