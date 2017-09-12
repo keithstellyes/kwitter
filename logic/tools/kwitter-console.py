@@ -117,10 +117,14 @@ class KwitterConsole(Cmd):
                 import logic.tools.generate_new_db
                 logic.tools.generate_new_db.main()
             elif args[0] == 'exec':
-                if args[1] == 'file':
+                if args[1] == 'script':
                     script = open(args[2], 'r').read()
                     print('Executing query from:' + args[2])
                     rows = self.kwdb.cursor().executescript(script).fetchall()
+                elif args[1] == 'file':
+                    script = open(args[2], 'r').read()
+                    print('Executing query from:' + args[2])
+                    rows = self.kwdb.cursor().execute(script).fetchall()
                 else:
                     query = ' '.join(args[1:])
                     print('Executing query: ' + query)
