@@ -1,6 +1,6 @@
 from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 from logic.tweets.tweet import Tweet
-
+from logic.database.db_script_getter import read_db_script
 
 #gets tweet's user, content and timestamp
 
@@ -12,14 +12,7 @@ def get_feed_for_user_by_user_id(kwdb, user_id):
 
 
 def get_feed_for_user_by_user_id_sqlite3(kwdb, user_id):
-    query = '''-- get the tweet content and timestamp, dropping the ID information
-select HANDLE,CONTENT,TIMESTAMP from (
--- get the handles for all those ID's
-    select HANDLE, FOLLOWEE_ID from (
--- get the ID's of all followers
-        select FOLLOWEE_ID from FOLLOWERS where FOLLOWER_ID=?
-    ) inner join USERS on USERS.USER_ID=FOLLOWEE_ID
-) inner join TWEETS on FOLLOWEE_ID=TWEETS.USER_ID order by TIMESTAMP desc;'''
+    query = read_db_script(['tweets', 'get-user-feed-via-userid.sql'])
     cursor = kwdb.cursor()
     cursor.execute(query, (int(user_id),))
     rows = cursor.fetchall()

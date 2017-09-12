@@ -1,4 +1,5 @@
 from logic.tags import tag_management
+from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
 class TagTweet:
     def __init__(self, tag_id, tweet_id):

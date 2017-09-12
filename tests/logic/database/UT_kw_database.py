@@ -2,7 +2,7 @@ import unittest
 import setup_env
 
 from logic.database.kw_database import KWDB
-from logic.tools import generate_new_db
+from logic.database.db_generation import generate_tables
 from logic.tweets.tweet import Tweet
 from logic.users.tweeter_user import TweeterUser
 from logic.shared import get_all
@@ -11,7 +11,7 @@ from logic.followers.follower import Follower
 from logic.shared import get_feed
 from logic.users import user_management
 
-generate_new_db.generate_tables('testdir', 'sqlite3')
+generate_tables('testdir', 'sqlite3')
 kwdb = KWDB(base_dir='testdir')
 kwdb.connection = connection(kwdb)
 

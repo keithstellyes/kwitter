@@ -36,16 +36,18 @@ def get_tag_id_sqlite3(tag, kwdb):
         return None
     return row[0]
 
-def get_all_tweets_with_tag(tag_id, kwdb):
+def get_all_tweets_with_tag(tag, kwdb):
     if kwdb.db_type == 'sqlite3':
-        return get_all_tweets_with_tag_sqlite3(tag_id, kwdb)
+        return get_all_tweets_with_tag_sqlite3(tag, kwdb)
     else:
         raise UnsupportedDBTypeException
 
-def get_all_tweets_with_tag_sqlite3(tag_id, kwdb):
+def get_all_tweets_with_tag_sqlite3(tag, kwdb):
     conn = kwdb.connection
     statement = 'select TWEET_ID from TAG_TWEET where TAG_ID=?'
-    rows = kwdb.cursor().execute(statement, (int(tag_id),))
+    if tag.tag_id is None:
+        tag.tag_id = get_tag_id(tag, kwdb)
+    rows = kwdb.cursor().execute(statement, (int(tag.tag_id),))
     conn.commit()
 
     results = []

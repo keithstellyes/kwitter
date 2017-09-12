@@ -1,11 +1,11 @@
 from logic.users import tweeter_user
-
+from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
 def add_user_auto(kwdb, user):
     if kwdb.db_type == 'sqlite3':
         add_user_auto_sqlite3(kwdb, user)
     else:
-        raise UnsupportedDBException
+        raise UnsupportedDBTypeException(kwdb.db_type)
 
 def add_user_auto_sqlite3(kwdb, user):
     conn = kwdb.connection
