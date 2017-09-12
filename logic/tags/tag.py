@@ -8,7 +8,6 @@ class Tag:
         self.count = count
 
     def __dbadd__(self, kwdb):
-        #if not tag_field_exists:
         tag_management.add_tag_auto(kwdb, self)
 
     def __str__(self):

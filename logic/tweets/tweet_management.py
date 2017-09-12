@@ -25,7 +25,9 @@ def add_tweet_sqlite3(kwdb, tweet_):
         user_id = user_management.get_id_from_username(kwdb, tweet_.user_handle)
 
     tweet_id = tweet_.tweet_id
-    timestamp = int(time.time())
+    if tweet_.timestamp is None:
+        tweet_.timestamp = int(time.time())
+    timestamp = tweet_.timestamp
     content = tweet_.content
 
     cursor = conn.cursor()

@@ -27,7 +27,6 @@ def get_tag_id(tag, kwdb):
 
 def get_tag_id_sqlite3(tag, kwdb):
     cursor = kwdb.cursor()
-    print(tag, end='\n======\n')
     results = cursor.execute('select TAG_ID from TAGS where FIELD=?', (tag,))
 
     # returns None if no result
