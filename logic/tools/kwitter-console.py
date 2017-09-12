@@ -115,6 +115,7 @@ class KwitterConsole(Cmd):
             elif args[0] == 'generate':
                 print('Ok, let\'s generate a DB for you')
                 import logic.tools.generate_new_db
+                logic.tools.generate_new_db.main()
             else:
                 print('Unrecognized option for `db\': ' + args[0])
         except:
