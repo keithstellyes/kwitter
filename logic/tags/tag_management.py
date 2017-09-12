@@ -1,6 +1,6 @@
-from tags import tag as tag_module
+from logic.tags import tag as tag_module
 
-from database.unsupported_db_type_exception import UnsupportedDBTypeException
+from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
 
 def scan_tags_from_string(s):

@@ -1,5 +1,5 @@
-import _fixpathing
-from database import kw_database
+import setup_env
+from logic.database import kw_database
 
 global _conn
 _conn = None

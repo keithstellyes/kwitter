@@ -1,6 +1,6 @@
 import kwdb_helper
 
-from shared import get_all
+from logic.shared import get_all
 
 db = kwdb_helper.prompt_for_db()
 

@@ -1,4 +1,4 @@
-from tags import tag_management
+from logic.tags import tag_management
 
 class TagTweet:
     def __init__(self, tag_id, tweet_id):

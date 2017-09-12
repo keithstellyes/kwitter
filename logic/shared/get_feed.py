@@ -1,5 +1,5 @@
-from database.unsupported_db_type_exception import UnsupportedDBTypeException
-from tweets.tweet import Tweet
+from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
+from logic.tweets.tweet import Tweet
 
 #gets tweet's user, content and timestamp
 def get_feed_for_user_by_user_id(kwdb, user_id):

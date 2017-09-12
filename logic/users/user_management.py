@@ -1,4 +1,4 @@
-from users import tweeter_user
+from logic.users import tweeter_user
 
 
 def add_user_auto(kwdb, user):

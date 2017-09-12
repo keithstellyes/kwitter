@@ -1,5 +1,5 @@
-from database.unsupported_db_type_exception import UnsupportedDBTypeException
-from followers import follower_management
+from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
+from logic.followers import follower_management
 
 class Follower:
     def __init__(self, follower_id=None, followee_id=None, follower_handle=None, followee_handle=None):

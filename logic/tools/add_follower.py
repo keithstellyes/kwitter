@@ -1,7 +1,7 @@
-import _fixpathing
+import setup_env
 
-from followers.follower import Follower
-from users import user_management
+from logic.followers.follower import Follower
+from logic.users import user_management
 
 import kwdb_helper
 

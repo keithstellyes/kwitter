@@ -1,9 +1,9 @@
 import sqlite3
-import _fixpathing
+import setup_env
 
-from database import kw_database
+from logic.database import kw_database
 
-from database.unsupported_db_type_exception import UnsupportedDBTypeException
+from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
 KWDB = kw_database.KWDB
 
@@ -23,7 +23,7 @@ def generate_tables_sqlite3(conn):
     conn.close()
 
 def generate_tables(directory, db_type):
-    db = KWDB(base_dir=directory, db_filename=DB_FILE_NAME, db_type=db_type)
+    db = KWDB(base_dir=directory, db_type=db_type)
 
     if db_type == 'sqlite3':
         generate_tables_sqlite3(sqlite3.connect(db.db_filepath()))

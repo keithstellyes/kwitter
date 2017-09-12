@@ -1,8 +1,8 @@
-import _fixpathing
+import setup_env
 
-from followers import follower_management
+from logic.followers import follower_management
 
-from tools import kwdb_helper
+from logic.tools import kwdb_helper
 
 db = kwdb_helper.prompt_for_db()
 kwdb = db

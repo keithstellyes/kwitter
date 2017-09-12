@@ -1,7 +1,7 @@
-from users.user_management import get_id_from_username
-from users.user_management import get_username_from_id
+from logic.users.user_management import get_id_from_username
+from logic.users.user_management import get_username_from_id
 
-from database.unsupported_db_type_exception import UnsupportedDBTypeException
+from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
 
 def add_follower_auto(kwdb, follower):

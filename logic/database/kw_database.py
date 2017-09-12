@@ -5,8 +5,9 @@
 import json
 import sqlite3
 
-from shared import uuid as shared_uuid
+from logic.shared import uuid as shared_uuid
 
+KWDB_DEFAULT_FILENAME = 'kw.db'
 
 class KWDB:
     # future: postgres
@@ -14,7 +15,7 @@ class KWDB:
     DB_TYPES = ['sqlite3']
     CONNECTOR_FUNCTIONS = {'sqlite3' : sqlite3.connect}
 
-    def __init__(self, base_dir, db_filename, db_type=DB_TYPES[0]):
+    def __init__(self, base_dir, db_filename=KWDB_DEFAULT_FILENAME, db_type=DB_TYPES[0]):
         self.db_type = db_type
 
         if not base_dir.endswith('/'):

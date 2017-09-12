@@ -1,4 +1,4 @@
-from users import user_management
+from logic.users import user_management
 
 
 class TweeterUser:

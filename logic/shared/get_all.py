@@ -4,11 +4,11 @@ This is intended for debug or for tools.
 Normally, this probably shouldn't be called...
 '''
 
-from tweets import tweet
-from users import tweeter_user
-from tags import tag as tag_module
+from logic.tweets import tweet
+from logic.users import tweeter_user
+from logic.tags import tag as tag_module
 
-from database.unsupported_db_type_exception import UnsupportedDBTypeException
+from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
 
 def get_all_users(kwdb):

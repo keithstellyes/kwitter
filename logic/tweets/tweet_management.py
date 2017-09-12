@@ -1,12 +1,12 @@
 import time
 
-from tags import tag as tag_module
-from tags import tag_management
-from tweets import tweet
-from users import user_management
-from shared import tagtweet
+from logic.tags import tag as tag_module
+from logic.tags import tag_management
+from logic.tweets import tweet
+from logic.users import user_management
+from logic.shared import tagtweet
 
-from database.unsupported_db_type_exception import UnsupportedDBTypeException
+from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
 
 def add_tweet_auto(kwdb, tweet_):

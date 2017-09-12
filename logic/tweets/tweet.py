@@ -1,8 +1,8 @@
-from tweets import tweet_management
-from shared import tagtweet
-from tags import tag_management
-from tags import tag as tag_module
-from users import user_management
+from logic.tweets import tweet_management
+from logic.shared import tagtweet
+from logic.tags import tag_management
+from logic.tags import tag as tag_module
+from logic.users import user_management
 
 class Tweet:
     def __init__(self, user_id=None, content=None, timestamp=None, tweet_id=None, user_handle=None):

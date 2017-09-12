@@ -1,5 +1,5 @@
-from tags import tag_management
-from shared import tagtweet
+from logic.tags import tag_management
+from logic.shared import tagtweet
 
 class Tag:
     def __init__(self, field, tag_id=None, count=None):

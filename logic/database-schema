@@ -16,8 +16,8 @@ TAG_TWEET TABLE
 
 TAG TABLE
 
-| TAG_UUID | FIELD ( varchar(max_tweet_length - 1) |
-|----------+---------------------------------------|
+| TAG_UUID | FIELD ( varchar(max_tweet_length - 1) | COUNT |
+|----------+---------------------------------------+-------|
 
 Adding a new tweet:
     User             : `user'

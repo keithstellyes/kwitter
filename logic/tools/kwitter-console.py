@@ -4,11 +4,10 @@ import sys
 import shlex
 import argparse
 
-import _fixpathing
-from tweets import tweet
-from users import tweeter_user
+import setup_env
+from logic.tweets import tweet
+from logic.users import tweeter_user
 import kwdb_helper
-import traceback
 
 def _exec(prog, arg):
     pipe = os.popen(sys.executable + ' ' + prog + ' ' + arg)
@@ -92,9 +91,9 @@ class KwitterConsole(Cmd):
                 print('`get\' needs an argument')
                 print('one-of:\n' + '\n'.join(valid_opts))
             elif args[0] == 'tweet':
-                from shared.get_all import get_all_tweets
+                from logic.shared.get_all import get_all_tweets
                 from datetime import datetime
-                from users.user_management import get_username_from_id
+                from logic.users.user_management import get_username_from_id
                 tweets = get_all_tweets(self.kwdb)
                 for tweet in tweets:
                     tweet.user_handle = get_username_from_id(kwdb=self.kwdb, id=tweet.user_id)
@@ -115,7 +114,7 @@ class KwitterConsole(Cmd):
                 print('one-of:\n' + '\n'.join(valid_opts))
             elif args[0] == 'generate':
                 print('Ok, let\'s generate a DB for you')
-                import generate_new_db
+                import logic.tools.generate_new_db
             else:
                 print('Unrecognized option for `db\': ' + args[0])
         except:

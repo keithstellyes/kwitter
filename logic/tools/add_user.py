@@ -2,7 +2,7 @@
 
 import kwdb_helper
 
-from users.tweeter_user import TweeterUser
+from logic.users.tweeter_user import TweeterUser
 
 print('DEPRECATED use the admin console instead.')
 

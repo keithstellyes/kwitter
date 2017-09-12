@@ -1,9 +1,9 @@
-import _fixpathing
+import setup_env
 
 import kwdb_helper
 
-from shared import get_feed
-from users import user_management
+from logic.shared import get_feed
+from logic.users import user_management
 
 from datetime import datetime
 

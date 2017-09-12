@@ -3,11 +3,10 @@
 import time
 
 import kwdb_helper
-from tweets import tweet_management
-from tweets.tweet import Tweet
-from users import user_management
-
-from tags import tag_management
+from logic.tweets import tweet_management
+from logic.tweets.tweet import Tweet
+from logic.users import user_management
+from logic.tags import tag_management
 
 print('DEPRECATED use the admin console instead.')
 
