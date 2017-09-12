@@ -108,7 +108,7 @@ class KwitterConsole(Cmd):
     def do_db(self, arg):
         try:
             args = shlex.split(arg)
-            valid_opts = ['generate']
+            valid_opts = ['generate', 'exec']
             if len(args) == 0 or args[0] not in valid_opts:
                 print('`db\' needs an argument')
                 print('one-of:\n' + '\n'.join(valid_opts))
@@ -116,6 +116,19 @@ class KwitterConsole(Cmd):
                 print('Ok, let\'s generate a DB for you')
                 import logic.tools.generate_new_db
                 logic.tools.generate_new_db.main()
+            elif args[0] == 'exec':
+                if args[1] == 'file':
+                    script = open(args[2], 'r').read()
+                    print('Executing query from:' + args[2])
+                    rows = self.kwdb.cursor().executescript(script).fetchall()
+                else:
+                    query = ' '.join(args[1:])
+                    print('Executing query: ' + query)
+                    rows = self.kwdb.cursor().execute(query).fetchall()
+                for row in rows:
+                    row_str = [str(el) for el in row]
+                    print('|'.join(row_str))
+
             else:
                 print('Unrecognized option for `db\': ' + args[0])
         except:

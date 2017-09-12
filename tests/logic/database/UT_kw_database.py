@@ -97,7 +97,7 @@ class BasicCase(unittest.TestCase):
         self.assertEqual(logan_tweet_result.tweet_id, logan_tweet.tweet_id)
         self.assertEqual(logan_tweet_result.user_id, user_logan.user_id)
         self.assertIsNotNone(logan_tweet.tweet_id)
-        
+
 
 if __name__ == '__main__':
     unittest.main()
