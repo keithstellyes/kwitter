@@ -1,7 +1,8 @@
 from logic.tags import tag as tag_module
 
 from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
-
+from logic.database.db_script_getter import read_db_script
+from logic.tweets import tweet
 
 def scan_tags_from_string(s):
     tags = []
@@ -43,22 +44,28 @@ def get_all_tweets_with_tag(tag, kwdb):
         raise UnsupportedDBTypeException
 
 def get_all_tweets_with_tag_sqlite3(tag, kwdb):
-    conn = kwdb.connection
-    statement = 'select TWEET_ID from TAG_TWEET where TAG_ID=?'
-    if tag.tag_id is None:
-        tag.tag_id = get_tag_id(tag, kwdb)
-    rows = kwdb.cursor().execute(statement, (int(tag.tag_id),))
-    conn.commit()
+    db_script = read_db_script(['tweets', 'get-tweets-via-tagfield.sql'])
+    if tag.field is None:
+        tag.field = get_tag_field_from_id(tag.tag_id)
+    rows = kwdb.cursor().execute(db_script, (tag.field,))
 
-    results = []
+    count = None
+    tweets = []
     for row in rows:
-        results.append(row[0])
+        t = tweet.Tweet(content = row[0],
+                        user_handle=row[1],
+                        timestamp=row[2],
+                        tweet_id=row[3],
+                        user_id=row[4])
+        t.count = row[5]
+        tweets.append(t)
 
-    return results
 
-def get_tag_field_from_id(tag_field, kwdb):
+    return tweets
+
+def get_tag_field_from_id(tag_id, kwdb):
     if kwdb.db_type == 'sqlite3':
-        return get_tag_field_from_id_sqlite3(tag_field, kwdb)
+        return get_tag_field_from_id_sqlite3(tag_id, kwdb)
     raise UnsupportedDBTypeException
 
 def get_tag_field_from_id_sqlite3(tag_id, kwdb):

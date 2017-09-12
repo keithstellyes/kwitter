@@ -1,3 +1,4 @@
+import setup_env
 import kwdb_helper
 
 from logic.shared import get_all
