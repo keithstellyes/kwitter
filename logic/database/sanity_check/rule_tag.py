@@ -1,7 +1,7 @@
 from logic.database.sanity_check.rule import SanityCheckRule
 from logic.shared.get_all import get_all_tags, get_all_tweets
 from logic.tags.tag_management import scan_tags_from_string, get_all_tweets_with_tag
-
+from logic.database.db_script_getter import read_db_script
 
 
 class TagCountRule(SanityCheckRule):
@@ -31,7 +31,7 @@ class TagCountRule(SanityCheckRule):
 
 class TagTweetIntersectionRule(SanityCheckRule):
     def get_name(self):
-        return 'tag_tweet_intersection'
+        return 'tag_tweet_intersection_count'
     def get_desc(self):
         return 'Checks that all tweets and tags have their proper entries in the intersection table'
     def sanity_check(self, kwdb):
@@ -49,4 +49,13 @@ class TagTweetIntersectionRule(SanityCheckRule):
                 return False
         return True
 
-rules = [TagCountRule(), TagTweetIntersectionRule()]
+class TagTweetIntersectionUnique(SanityCheckRule):
+    def get_name(self):
+        return 'tag_tweet_intersection_duplicate'
+    def get_desc(self):
+        return 'Checks there are no duplicate entries in the intersection table'
+    def sanity_check(self, kwdb):
+        script = read_db_script(['sanity', 'unique_tagtweet.sql'])
+        return kwdb.cursor().execute(script).fetchall() == []
+
+rules = [TagCountRule(), TagTweetIntersectionRule(), TagTweetIntersectionUnique()]
