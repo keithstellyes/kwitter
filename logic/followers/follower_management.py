@@ -1,10 +1,16 @@
 from logic.users.user_management import get_id_from_username
 from logic.users.user_management import get_username_from_id
+from logic.users.user_management import get_id_from_username
 
 from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
 
 def add_follower_auto(kwdb, follower):
+    if follower.follower_id is None:
+        follower.follower_id = get_id_from_username(kwdb, follower.follower_handle)
+    if follower.followee_id is None:
+        follower.followee_id = get_id_from_username(kwdb, follower.followee_handle)
+
     follower_id = follower.follower_id
     followee_id = follower.followee_id
     follower_id = int(follower_id)

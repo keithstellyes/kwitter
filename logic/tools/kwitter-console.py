@@ -7,6 +7,7 @@ import argparse
 import setup_env
 from logic.tweets import tweet
 from logic.users import tweeter_user
+from logic.followers.follower import Follower
 import kwdb_helper
 
 def _exec(prog, arg):
@@ -63,7 +64,7 @@ class KwitterConsole(Cmd):
     def do_add(self, arg):
         try:
             args = shlex.split(arg)
-            valid_opts = ['tweet', 'user']
+            valid_opts = ['tweet', 'user', 'follower']
             if len(args) == 0 or args[0] not in valid_opts:
                 print('`add\' needs an argument')
                 print('one-of:\n' + '\n'.join(valid_opts))
@@ -77,6 +78,12 @@ class KwitterConsole(Cmd):
                 parsed = vars(add_user_parser.parse_args(args=args[1:]))
                 self.kwdb.add(tweeter_user.TweeterUser(user_id=parsed['user_id'],
                                                   handle=parsed['handle']))
+            elif args[0] == 'follower':
+                parsed = vars(add_follower_parser.parse_args(args=args[1:]))
+                self.kwdb.add(Follower(follower_id=parsed['follower_id'],
+                                       follower_handle=parsed['follower_handle'],
+                                       followee_id=parsed['followee_id'],
+                                       followee_handle=parsed['followee_handle']))
             else:
                 print('Unrecognized option for `add\': ' + args[0])
         except:
