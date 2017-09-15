@@ -113,7 +113,7 @@ class KwitterConsole(Cmd):
     def do_db(self, arg):
         try:
             args = shlex.split(arg)
-            valid_opts = ['generate', 'exec']
+            valid_opts = ['generate', 'exec', 'type']
             if len(args) == 0 or args[0] not in valid_opts:
                 print('`db\' needs an argument')
                 print('one-of:\n' + '\n'.join(valid_opts))
@@ -137,6 +137,8 @@ class KwitterConsole(Cmd):
                 for row in rows:
                     row_str = [str(el) for el in row]
                     print('|'.join(row_str))
+            elif args[0] == 'type':
+                print('DB type: {db_type}'.format(db_type=self.kwdb.db_type))
 
             else:
                 print('Unrecognized option for `db\': ' + args[0])
