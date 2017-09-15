@@ -8,6 +8,7 @@ import setup_env
 from logic.tweets import tweet
 from logic.users import tweeter_user
 from logic.followers.follower import Follower
+from logic.database.sanity_check import sanity_checker
 import kwdb_helper
 
 def _exec(prog, arg):
@@ -51,6 +52,11 @@ add_user_parser.add_argument('-user_id')
 add_user_parser.add_argument('-handle')
 
 get_tweet_parser = argparse.ArgumentParser(description='Get tweets', prog='get tweet')
+
+db_sanity_parser = argparse.ArgumentParser(description='Check the sanity of a DB', prog='db sanity')
+db_sanity_parser.add_argument('-include', action='append')
+db_sanity_parser.add_argument('-exclude', action='append')
+db_sanity_parser.add_argument('-list', action='store_true')
 
 class KwitterConsole(Cmd):
     def __init__(self, kwdb):
@@ -120,7 +126,7 @@ class KwitterConsole(Cmd):
     def do_db(self, arg):
         try:
             args = shlex.split(arg)
-            valid_opts = ['generate', 'exec', 'type']
+            valid_opts = ['generate', 'exec', 'type', 'sanity']
             if len(args) == 0 or args[0] not in valid_opts:
                 print('`db\' needs an argument')
                 print('one-of:\n' + '\n'.join(valid_opts))
@@ -146,6 +152,42 @@ class KwitterConsole(Cmd):
                     print('|'.join(row_str))
             elif args[0] == 'type':
                 print('DB type: {db_type}'.format(db_type=self.kwdb.db_type))
+
+            elif args[0] == 'sanity':
+                rules = sanity_checker.ALL_RULES
+                rule_map = {}
+                [rule_map.__setitem__(rule.get_name(), rule) for rule in rules]
+                parsed = vars(db_sanity_parser.parse_args(args=args[1:]))
+                if parsed['list']:
+                    print('Rules:')
+                    [print(rule.get_name()) for rule in rules]
+                    return
+                rules_to_use = []
+                if parsed['exclude'] is None and parsed['include'] is None:
+                    rules_to_use = rules
+                elif parsed['exclude'] is None and parsed['include'] is not None:
+                    for rule in parsed['include']:
+                        if rule not in rule_map.keys():
+                            raise Exception('Unrecognized rule name:' + rule)
+                        rules_to_use.append(rule_map[rule])
+                elif parsed['exclude'] is not None and parsed['include'] is None:
+                    for rule in parsed['exclude']:
+                        if rule not in rule_map.keys():
+                            raise Exception('Unrecognized rule name:' + rule)
+                        del rule_map[rule]
+                    rules_to_use = [rule_map[rule] for rule in rule_map.keys()]
+                elif parsed['include'] is not None and parsed['exclude'] is not None:
+                    raise Exception('Ambiguous arguments, given both includes and excludes')
+
+                print('Using rules:')
+                print('{rules}\n'.format(rules='\n'.join(
+                    [rule.get_name() for rule in rules_to_use])))
+                result = sanity_checker.sanitycheck(kwdb=self.kwdb, rules=rules_to_use)
+                if result is True:
+                    print('Ok')
+                else:
+                    for rule in result:
+                        print('Rule failed: ' + rule.get_name())
 
             else:
                 print('Unrecognized option for `db\': ' + args[0])
