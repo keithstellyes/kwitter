@@ -8,6 +8,7 @@ from logic.tweets import tweet
 from logic.users import tweeter_user
 from logic.tags import tag as tag_module
 from logic.followers.follower import Follower
+from logic.shared.tagtweet import TagTweet
 
 from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
@@ -42,7 +43,7 @@ def get_all_tags_sqlite3(kwdb):
 
 def get_all_tweets_sqlite3(kwdb):
     cursor = kwdb.cursor()
-    rows = cursor.execute('select * from TWEETS').fetchall()
+    rows = cursor.execute('select USER_ID, TWEET_ID, CONTENT, TIMESTAMP from TWEETS').fetchall()
     return [tweet.Tweet.build_from_row(row) for row in rows]
 
 def get_all_followers(kwdb):

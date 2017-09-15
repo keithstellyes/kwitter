@@ -10,8 +10,9 @@ class Tweet:
         self.tweet_id = tweet_id
         self.content = content
         self.timestamp = timestamp
-        tag_strs = tag_management.scan_tags_from_string(content)
-        self.tags = [tag_module.Tag(field=tag_str) for tag_str in tag_strs]
+        if content is not None:
+            tag_strs = tag_management.scan_tags_from_string(self.content)
+            self.tags = [tag_module.Tag(field=tag_str) for tag_str in tag_strs]
         self.user_handle = user_handle
 
     def build_from_row(row):
@@ -43,7 +44,10 @@ class Tweet:
                      tweet_id=self.tweet_id, user_id=self.user_id)
         return s
     def __lpad__(s):
-        return s + ' ' * (150 - len(s))
+        try:
+            return s + ' ' * (150 - len(s))
+        except TypeError:
+            return 'ERROR, NONE'
 
     def __dbadd__(self, kwdb):
         tweet_management.add_tweet_auto(kwdb, self)

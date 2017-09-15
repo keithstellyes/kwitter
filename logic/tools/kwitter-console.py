@@ -183,7 +183,7 @@ class KwitterConsole(Cmd):
                 print('{rules}\n'.format(rules='\n'.join(
                     [rule.get_name() for rule in rules_to_use])))
                 result = sanity_checker.sanitycheck(kwdb=self.kwdb, rules=rules_to_use)
-                if result is True:
+                if result == []:
                     print('Ok')
                 else:
                     for rule in result:

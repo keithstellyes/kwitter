@@ -45,6 +45,8 @@ def get_all_tweets_with_tag(tag, kwdb):
 
 def get_all_tweets_with_tag_sqlite3(tag, kwdb):
     db_script = read_db_script(['tweets', 'get-tweets-via-tagfield.sql'])
+    if not isinstance(tag, tag_module.Tag):
+        raise Exception('`tag\' should be instance of Tag')
     if tag.field is None:
         tag.field = get_tag_field_from_id(tag.tag_id)
     rows = kwdb.cursor().execute(db_script, (tag.field,))
