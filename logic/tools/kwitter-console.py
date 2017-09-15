@@ -58,6 +58,12 @@ db_sanity_parser.add_argument('-include', action='append')
 db_sanity_parser.add_argument('-exclude', action='append')
 db_sanity_parser.add_argument('-list', action='store_true')
 
+del_follower_parser = argparse.ArgumentParser(description='Removes a follower', prog='del follower')
+del_follower_parser.add_argument('-follower_id')
+del_follower_parser.add_argument('-followee_id')
+del_follower_parser.add_argument('-follower_handle')
+del_follower_parser.add_argument('-followee_handle')
+
 class KwitterConsole(Cmd):
     def __init__(self, kwdb):
         super(KwitterConsole, self).__init__()
@@ -92,6 +98,24 @@ class KwitterConsole(Cmd):
                                        followee_handle=parsed['followee_handle']))
             else:
                 print('Unrecognized option for `add\': ' + args[0])
+        except:
+            print(sys.exc_info())
+
+    def do_del(self, arg):
+        try:
+            args = shlex.split(arg)
+            valid_opts = ['follower']
+            if len(args) == 0 or args[0] not in valid_opts:
+                print('`del\' needs an argument')
+                print('one-of:\n' + '\n'.join(valid_opts))
+            elif args[0] == 'follower':
+                parsed = vars(del_follower_parser.parse_args(args[1:]))
+                follower = Follower(follower_id=parsed['follower_id'],
+                                    followee_id=parsed['followee_id'],
+                                    follower_handle=parsed['follower_handle'],
+                                    followee_handle=parsed['followee_handle'])
+                self.kwdb.delete(follower)
+                self.kwdb.commit()
         except:
             print(sys.exc_info())
 

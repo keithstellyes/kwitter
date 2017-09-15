@@ -6,6 +6,7 @@ import json
 import sqlite3
 
 from logic.shared import uuid as shared_uuid
+from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
 KWDB_DEFAULT_FILENAME = 'kw.db'
 
@@ -64,3 +65,12 @@ class KWDB:
     def adds(self, items):
         for item in items:
             self.add(item)
+
+    def delete(self, item):
+        item.__dbdel__(self)
+
+    def commit(self):
+        if self.db_type == 'sqlite3':
+            self.connection.commit()
+        else:
+            raise UnsupportedDBTypeException(self.db_type)

@@ -1,0 +1,1 @@
+delete from FOLLOWERS where FOLLOWER_ID=? and FOLLOWEE_ID=?;
