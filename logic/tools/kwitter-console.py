@@ -85,7 +85,7 @@ class KwitterConsole(Cmd):
     def do_get(self, arg):
         try:
             args = shlex.split(arg)
-            valid_opts = ['tweet']
+            valid_opts = ['tweet', 'user']
 
             if len(args) == 0 or args[0] not in valid_opts:
                 print('`get\' needs an argument')
@@ -101,6 +101,11 @@ class KwitterConsole(Cmd):
                                                                              user_handle=tweet.user_handle,
                                                                              timestamp=datetime.fromtimestamp(
                                                                              tweet.timestamp)))
+            elif args[0] == 'user':
+                from logic.shared.get_all import get_all_users
+                users = get_all_users(self.kwdb)
+                for user in users:
+                    print('{handle} ({id})'.format(handle=user.handle, id=user.user_id))
             else:
                 print('Unrecognized option for `get\': ' + args[0])
         except:
