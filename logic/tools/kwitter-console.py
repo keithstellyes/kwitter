@@ -9,6 +9,7 @@ from logic.tweets import tweet
 from logic.users import tweeter_user
 from logic.followers.follower import Follower
 from logic.database.sanity_check import sanity_checker
+from logic.database.db_script_getter import read_db_script
 import kwdb_helper
 
 def _exec(prog, arg):
@@ -67,6 +68,12 @@ del_follower_parser.add_argument('-followee_handle')
 del_user_parser = argparse.ArgumentParser(description='Deletes a user', prog='del user')
 del_user_parser.add_argument('-handle')
 del_user_parser.add_argument('-id')
+
+get_follower_parser = argparse.ArgumentParser(description='Gets a user\'s followers', prog='get follower')
+get_follower_parser.add_argument('-id')
+get_follower_parser.add_argument('-handle')
+
+get_followee_parser = get_follower_parser
 
 class KwitterConsole(Cmd):
     def __init__(self, kwdb):
@@ -135,7 +142,7 @@ class KwitterConsole(Cmd):
     def do_get(self, arg):
         try:
             args = shlex.split(arg)
-            valid_opts = ['tweet', 'user']
+            valid_opts = ['tweet', 'user', 'follower', 'followee']
 
             if len(args) == 0 or args[0] not in valid_opts:
                 print('`get\' needs an argument')
@@ -156,6 +163,24 @@ class KwitterConsole(Cmd):
                 users = get_all_users(self.kwdb)
                 for user in users:
                     print('{handle} ({id})'.format(handle=user.handle, id=user.user_id))
+            elif args[0] == 'follower':
+                parsed = vars(get_follower_parser.parse_args(args=args[1:]))
+                user = tweeter_user.TweeterUser(handle=parsed['handle'],
+                                                user_id=parsed['id'])
+
+                from logic.shared.get_all import get_all_followers_of_user
+                followers = get_all_followers_of_user(self.kwdb, user)
+                print('Followers:\n{followers}'.format(
+                    followers='\n'.join([follower.handle for follower in followers])))
+            elif args[0] == 'followee':
+                parsed = vars(get_followee_parser.parse_args(args=args[1:]))
+                user = tweeter_user.TweeterUser(handle=parsed['handle'],
+                                                user_id=parsed['id'])
+
+                from logic.shared.get_all import get_all_followees_of_user
+                followers = get_all_followees_of_user(self.kwdb, user)
+                print('Followees:\n{followees}'.format(
+                    followees='\n'.join([follower.handle for follower in followers])))
             else:
                 print('Unrecognized option for `get\': ' + args[0])
         except:
