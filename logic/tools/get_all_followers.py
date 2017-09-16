@@ -4,7 +4,7 @@ from logic.users.user_management import get_username_from_id
 
 db = kwdb_helper.prompt_for_db()
 
-followers = get_all.get_all_followers(db)
+followers = get_all.get_all_followersrelations(db)
 
 for follower in followers:
     followee_handle = get_username_from_id(db, follower.followee_id)

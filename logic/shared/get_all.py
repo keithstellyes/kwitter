@@ -46,13 +46,13 @@ def get_all_tweets_sqlite3(kwdb):
     rows = cursor.execute('select USER_ID, TWEET_ID, CONTENT, TIMESTAMP from TWEETS').fetchall()
     return [tweet.Tweet.build_from_row(row) for row in rows]
 
-def get_all_followers(kwdb):
+def get_all_followersrelations(kwdb):
     if kwdb.db_type == 'sqlite3':
-        return get_all_followers_sqlite3(kwdb)
+        return get_all_followerrelations_sqlite3(kwdb)
     else:
         raise UnsupportedDBTypeException(kwdb.db_type)
 
-def get_all_followers_sqlite3(kwdb):
+def get_all_followerrelations_sqlite3(kwdb):
     cursor = kwdb.cursor()
     rows = cursor.execute('select FOLLOWEE_ID, FOLLOWER_ID from FOLLOWER_RELATIONS').fetchall()
     return [FollowerRelation(followee_id=row[0], follower_id=row[1]) for row in rows]

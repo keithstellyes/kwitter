@@ -10,6 +10,7 @@ from logic.tools.kwdb_helper import connection
 from logic.followers.follower import FollowerRelation
 from logic.shared import get_feed
 from logic.users import user_management
+from logic.database.sanity_check.sanity_checker import sanitycheck
 
 generate_tables('testdir', 'sqlite3')
 kwdb = KWDB(base_dir='testdir')
@@ -98,6 +99,28 @@ class BasicCase(unittest.TestCase):
         self.assertEqual(logan_tweet_result.user_id, user_logan.user_id)
         self.assertIsNotNone(logan_tweet.tweet_id)
 
+        users_contained = get_all.get_all_users(kwdb)
+        userids_expected = [user.user_id for user in users_contained]
+        del userids_expected[userids_expected.index(user_logan.user_id)]
+        userids_expected.sort()
+        len_before = len(users_contained)
+        kwdb.delete(TweeterUser(user_id=user_logan.user_id))
+        users_contained = get_all.get_all_users(kwdb)
+        userids_actual = [user.user_id for user in users_contained]
+        userids_actual.sort()
+        self.assertEqual(userids_expected, userids_actual)
+
+        tweets_contained = get_all.get_all_tweets(kwdb)
+        tweetids_expected = [tweet.tweet_id for tweet in tweets_contained]
+        del tweetids_expected[tweetids_expected.index(t0.tweet_id)]
+        tweetids_expected.sort()
+
+        kwdb.delete(Tweet(tweet_id=t0.tweet_id))
+        tweets_contained = get_all.get_all_tweets(kwdb)
+        tweetids_actual = sorted([tweet.tweet_id for tweet in tweets_contained])
+        self.assertEqual(tweetids_expected, tweetids_actual)
+
+        self.assertEqual(sanitycheck(kwdb), [])
 
 if __name__ == '__main__':
     unittest.main()
