@@ -64,6 +64,10 @@ del_follower_parser.add_argument('-followee_id')
 del_follower_parser.add_argument('-follower_handle')
 del_follower_parser.add_argument('-followee_handle')
 
+del_user_parser = argparse.ArgumentParser(description='Deletes a user', prog='del user')
+del_user_parser.add_argument('-handle')
+del_user_parser.add_argument('-id')
+
 class KwitterConsole(Cmd):
     def __init__(self, kwdb):
         super(KwitterConsole, self).__init__()
@@ -104,7 +108,7 @@ class KwitterConsole(Cmd):
     def do_del(self, arg):
         try:
             args = shlex.split(arg)
-            valid_opts = ['follower', 'tweet']
+            valid_opts = ['follower', 'tweet', 'user']
             if len(args) == 0 or args[0] not in valid_opts:
                 print('`del\' needs an argument')
                 print('one-of:\n' + '\n'.join(valid_opts))
@@ -120,6 +124,11 @@ class KwitterConsole(Cmd):
                 t = tweet.Tweet(tweet_id=int(args[1]))
                 self.kwdb.delete(t)
                 self.kwdb.commit()
+            elif args[0] == 'user':
+                parsed = vars(del_user_parser.parse_args(args=args[1:]))
+                user = tweeter_user.TweeterUser(user_id=parsed['id'],
+                                                handle=parsed['handle'])
+                self.kwdb.delete(user)
         except:
             print(sys.exc_info())
 

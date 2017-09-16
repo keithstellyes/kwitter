@@ -1,0 +1,1 @@
+select TWEET_ID from TWEETS where USER_ID=?;
