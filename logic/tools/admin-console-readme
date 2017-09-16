@@ -1,0 +1,33 @@
+The admin console allows a kwitter operator to interact with the instance and
+its DB.
+
+Syntax is as follows:
+
+[add,db,del,get] [...]
+
+add: add [follower, tweet, user] [...]
+     add follower [-follower_id, -follower_handle, -followee_id, -followee_handle]
+     add user [-user_id, -handle]
+        (if an ID is not provided, will be generated)
+     add tweet [-user_id, -handle, -content, -timestamp, -tweet_id]
+        Only one of -user_id or -handle is required ; -timestamp and -tweet_id
+        are optional
+
+db: db [exec, generate, sanity, type]
+    db exec [file]
+    Executes a query, if first parameter is file, it'll read from a file instead.
+    db generate
+    Generates a DB
+    db sanity
+    Checks a DB's sanity
+    db type
+    Gets the current DB's type
+
+del [follower, tweet, user]
+    del follower [-follower_id, -follower_handle, -followee_id, -followee_handle]
+    del tweet (tweet ID)
+    del user [-id, -handle]
+
+get: get [tweet, user, follower, followee]
+     Gets all of some entity type.
+     get follower/followee [-user_id, -user_handle]

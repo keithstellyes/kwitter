@@ -82,7 +82,13 @@ class KwitterConsole(Cmd):
         self.kwdb = kwdb
 
     def emptyline(self):
-        pass
+        self.do_help(None)
+
+    def do_help(self, arg):
+        f = open(os.path.join(os.path.dirname(__file__), 'admin-console-readme'), 'r')
+        s = f.read()
+        f.close()
+        print(s)
 
     def do_add(self, arg):
         try:
