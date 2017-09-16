@@ -3,6 +3,8 @@ from logic.shared import tagtweet
 from logic.tags import tag_management
 from logic.tags import tag as tag_module
 from logic.users import user_management
+from logic.database.db_script_getter import read_db_script
+from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
 class Tweet:
     def __init__(self, user_id=None, content=None, timestamp=None, tweet_id=None, user_handle=None):
@@ -51,3 +53,17 @@ class Tweet:
 
     def __dbadd__(self, kwdb):
         tweet_management.add_tweet_auto(kwdb, self)
+
+    def __dbdel__(self, kwdb):
+        if kwdb.db_type == 'sqlite3':
+            tag_ids_script = read_db_script(['tweets', 'get-tagids-of-tweet.sql'])
+            decrement_tag_script = read_db_script(['tweets', 'decrement-tag-byid.sql'])
+            delete_tweet_script = read_db_script(['delete', 'delete-tweet.sql'])
+            self.tweet_id = int(self.tweet_id)
+            tag_ids = kwdb.cursor().execute(tag_ids_script, (self.tweet_id,)).fetchall()
+            tag_ids = [tag_id[0] for tag_id in tag_ids]
+            for tag_id in tag_ids:
+                kwdb.cursor().execute(decrement_tag_script.replace('?', str(tag_id)))
+            kwdb.cursor().executescript(delete_tweet_script.replace('?', str(self.tweet_id)))
+        else:
+            raise UnsupportedDBTypeException(kwdb.db_type)

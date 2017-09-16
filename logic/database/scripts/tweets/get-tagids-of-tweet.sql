@@ -1,0 +1,1 @@
+select TAG_ID from TAG_TWEET where TWEET_ID=?

@@ -1,0 +1,1 @@
+update TAGS set COUNT = COUNT - 1 where TAG_ID=?;

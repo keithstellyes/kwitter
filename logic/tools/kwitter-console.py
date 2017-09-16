@@ -104,7 +104,7 @@ class KwitterConsole(Cmd):
     def do_del(self, arg):
         try:
             args = shlex.split(arg)
-            valid_opts = ['follower']
+            valid_opts = ['follower', 'tweet']
             if len(args) == 0 or args[0] not in valid_opts:
                 print('`del\' needs an argument')
                 print('one-of:\n' + '\n'.join(valid_opts))
@@ -115,6 +115,10 @@ class KwitterConsole(Cmd):
                                     follower_handle=parsed['follower_handle'],
                                     followee_handle=parsed['followee_handle'])
                 self.kwdb.delete(follower)
+                self.kwdb.commit()
+            elif args[0] == 'tweet':
+                t = tweet.Tweet(tweet_id=int(args[1]))
+                self.kwdb.delete(t)
                 self.kwdb.commit()
         except:
             print(sys.exc_info())
