@@ -5,7 +5,7 @@ from logic.users.user_management import get_id_from_username
 from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
 
-def add_follower_auto(kwdb, follower):
+def add_followerrelation_auto(kwdb, follower):
     if follower.follower_id is None:
         follower.follower_id = get_id_from_username(kwdb, follower.follower_handle)
     if follower.followee_id is None:
@@ -16,13 +16,13 @@ def add_follower_auto(kwdb, follower):
     follower_id = int(follower_id)
     followee_id = int(followee_id)
     if kwdb.db_type == 'sqlite3':
-        add_follower_auto_sqlite3(kwdb, follower_id, followee_id)
+        add_followerrelation_auto_sqlite3(kwdb, follower_id, followee_id)
     else:
         raise UnsupportedDBTypeException
 
-def add_follower_auto_sqlite3(kwdb, follower_id, followee_id):
+def add_followerrelation_auto_sqlite3(kwdb, follower_id, followee_id):
     cursor = kwdb.cursor()
-    cursor.execute('insert into FOLLOWERS(FOLLOWER_ID, FOLLOWEE_ID) values (?, ?)', (int(follower_id), int(followee_id)))
+    cursor.execute('insert into FOLLOWER_RELATIONS(FOLLOWER_ID, FOLLOWEE_ID) values (?, ?)', (int(follower_id), int(followee_id)))
     kwdb.connection.commit()
 
 #todo do it better
@@ -32,7 +32,7 @@ def get_followerids_by_handle(kwdb, followee_handle):
 
 def get_followerids_by_id(kwdb, followee_id):
     cursor = kwdb.cursor()
-    cursor.execute('select FOLLOWER_ID from FOLLOWERS where FOLLOWEE_ID=?', (followee_id,))
+    cursor.execute('select FOLLOWER_ID from FOLLOWER_RELATIONS where FOLLOWEE_ID=?', (followee_id,))
     rows = cursor.fetchall()
     followers = [row[0] for row in rows]
     return followers
@@ -40,7 +40,7 @@ def get_followerids_by_id(kwdb, followee_id):
 #todo do it better
 '''
 select HANDLE from ( 
-    select FOLLOWER_ID from FOLLOWERS where FOLLOWEE_ID=?
+    select FOLLOWER_ID from FOLLOWER_RELATIONS where FOLLOWEE_ID=?
 ) inner join USERS on USERS.USER_ID=FOLLOWER_ID;
 '''
 def get_followerhandles_by_handle(kwdb, followee_handle):

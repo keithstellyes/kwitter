@@ -7,7 +7,7 @@ import argparse
 import setup_env
 from logic.tweets import tweet
 from logic.users import tweeter_user
-from logic.followers.follower import Follower
+from logic.followers.follower import FollowerRelation
 from logic.database.sanity_check import sanity_checker
 from logic.database.db_script_getter import read_db_script
 import kwdb_helper
@@ -103,10 +103,10 @@ class KwitterConsole(Cmd):
                                                   handle=parsed['handle']))
             elif args[0] == 'follower':
                 parsed = vars(add_follower_parser.parse_args(args=args[1:]))
-                self.kwdb.add(Follower(follower_id=parsed['follower_id'],
-                                       follower_handle=parsed['follower_handle'],
-                                       followee_id=parsed['followee_id'],
-                                       followee_handle=parsed['followee_handle']))
+                self.kwdb.add(FollowerRelation(follower_id=parsed['follower_id'],
+                                               follower_handle=parsed['follower_handle'],
+                                               followee_id=parsed['followee_id'],
+                                               followee_handle=parsed['followee_handle']))
             else:
                 print('Unrecognized option for `add\': ' + args[0])
         except:
@@ -121,10 +121,10 @@ class KwitterConsole(Cmd):
                 print('one-of:\n' + '\n'.join(valid_opts))
             elif args[0] == 'follower':
                 parsed = vars(del_follower_parser.parse_args(args[1:]))
-                follower = Follower(follower_id=parsed['follower_id'],
-                                    followee_id=parsed['followee_id'],
-                                    follower_handle=parsed['follower_handle'],
-                                    followee_handle=parsed['followee_handle'])
+                follower = FollowerRelation(follower_id=parsed['follower_id'],
+                                            followee_id=parsed['followee_id'],
+                                            follower_handle=parsed['follower_handle'],
+                                            followee_handle=parsed['followee_handle'])
                 self.kwdb.delete(follower)
                 self.kwdb.commit()
             elif args[0] == 'tweet':

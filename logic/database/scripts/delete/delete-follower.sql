@@ -1,1 +1,1 @@
-delete from FOLLOWERS where FOLLOWER_ID=? and FOLLOWEE_ID=?;
+delete from FOLLOWER_RELATIONS where FOLLOWER_ID=? and FOLLOWEE_ID=?;

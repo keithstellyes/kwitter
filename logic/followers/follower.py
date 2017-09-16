@@ -3,7 +3,7 @@ from logic.followers import follower_management
 from logic.database.db_script_getter import read_db_script
 from logic.users.user_management import get_id_from_username, get_username_from_id
 
-class Follower:
+class FollowerRelation:
     def __init__(self, follower_id=None, followee_id=None, follower_handle=None, followee_handle=None):
         self.follower_id = follower_id
         self.followee_id = followee_id
@@ -12,7 +12,7 @@ class Follower:
 
     def build_from_row(row, kwdb):
         if kwdb.db_type == 'sqlite3':
-            return Follower.build_from_row_sqlite3(row)
+            return FollowerRelation.build_from_row_sqlite3(row)
         else:
             raise UnsupportedDBTypeException
 
@@ -27,8 +27,8 @@ class Follower:
             self.followee_handle = get_username_from_id(kwdb, self.followee_id)
 
     def build_from_row_sqlite3(row):
-        return Follower(Follower._get_follower_id_from_row_sqlite3(row),
-                        Follower._get_followee_id_from_row_sqlite3(row))
+        return FollowerRelation(FollowerRelation._get_follower_id_from_row_sqlite3(row),
+                                FollowerRelation._get_followee_id_from_row_sqlite3(row))
 
     def _get_follower_id_from_row_sqlite3(row):
         return row[0]
@@ -37,7 +37,7 @@ class Follower:
         return row[1]
 
     def __dbadd__(self, kwdb):
-        follower_management.add_follower_auto(kwdb, self)
+        follower_management.add_followerrelation_auto(kwdb, self)
 
     def __dbdel__(self, kwdb):
         script = read_db_script(['delete', 'delete-follower.sql'])

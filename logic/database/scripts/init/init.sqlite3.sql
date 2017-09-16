@@ -18,5 +18,5 @@ create table TAG_TWEET(TAG_ID integer,
                        TWEET_ID integer);
 
 --Followers table
-create table FOLLOWERS(FOLLOWER_ID integer,
+create table FOLLOWER_RELATIONS(FOLLOWER_ID integer,
                        FOLLOWEE_ID integer);

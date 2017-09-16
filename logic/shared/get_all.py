@@ -7,7 +7,7 @@ Normally, this probably shouldn't be called...
 from logic.tweets import tweet
 from logic.users import tweeter_user, user_management
 from logic.tags import tag as tag_module
-from logic.followers.follower import Follower
+from logic.followers.follower import FollowerRelation
 from logic.shared.tagtweet import TagTweet
 from logic.database.db_script_getter import read_db_script
 from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
@@ -54,8 +54,8 @@ def get_all_followers(kwdb):
 
 def get_all_followers_sqlite3(kwdb):
     cursor = kwdb.cursor()
-    rows = cursor.execute('select FOLLOWEE_ID, FOLLOWER_ID from FOLLOWERS').fetchall()
-    return [Follower(followee_id=row[0], follower_id=row[1]) for row in rows]
+    rows = cursor.execute('select FOLLOWEE_ID, FOLLOWER_ID from FOLLOWER_RELATIONS').fetchall()
+    return [FollowerRelation(followee_id=row[0], follower_id=row[1]) for row in rows]
 
 def get_all_followers_of_user(kwdb, user):
     if kwdb.db_type == 'sqlite3':

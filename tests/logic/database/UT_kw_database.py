@@ -7,7 +7,7 @@ from logic.tweets.tweet import Tweet
 from logic.users.tweeter_user import TweeterUser
 from logic.shared import get_all
 from logic.tools.kwdb_helper import connection
-from logic.followers.follower import Follower
+from logic.followers.follower import FollowerRelation
 from logic.shared import get_feed
 from logic.users import user_management
 
@@ -52,7 +52,7 @@ class BasicCase(unittest.TestCase):
 
         user_kevin = TweeterUser(user_id=10, handle='kevin')
         kwdb.add(user_kevin)
-        follower = Follower(followee_id=1, follower_id=10)
+        follower = FollowerRelation(followee_id=1, follower_id=10)
         kwdb.add(follower)
         feed = get_feed.get_feed_for_user_by_user_id(kwdb=kwdb, user_id=user_kevin.user_id)
         self.assertEqual(len(feed), 3)
