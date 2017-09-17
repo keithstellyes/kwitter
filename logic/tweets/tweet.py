@@ -6,6 +6,8 @@ from logic.users import user_management
 from logic.database.db_script_getter import read_db_script
 from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
 
+import json
+
 class Tweet:
     def __init__(self, user_id=None, content=None, timestamp=None, tweet_id=None, user_handle=None):
         self.user_id = user_id
@@ -67,3 +69,15 @@ class Tweet:
             kwdb.cursor().executescript(delete_tweet_script.replace('?', str(self.tweet_id)))
         else:
             raise UnsupportedDBTypeException(kwdb.db_type)
+    def __jsonobj__(self):
+        resultdict = {}
+        resultdict['tweet_id'] = self.tweet_id
+        if self.user_id is not None:
+            resultdict['user_id'] = self.user_id
+        if self.tags is not None:
+            resultdict['tags'] = [tag.field for tag in self.tags]
+        resultdict['content'] = self.content
+        resultdict['timestamp'] = self.timestamp
+        return resultdict
+    def __jsonserialize__(self):
+        return json.dumps(self.__jsonobj__())

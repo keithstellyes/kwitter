@@ -1,12 +1,11 @@
 import unittest
 import setup_env
 
-from logic.database.kw_database import KWDB
+from logic.database.kw_database import KWDB, connect
 from logic.database.db_generation import generate_tables
 from logic.tweets.tweet import Tweet
 from logic.users.tweeter_user import TweeterUser
 from logic.shared import get_all
-from logic.tools.kwdb_helper import connection
 from logic.followers.follower import FollowerRelation
 from logic.shared import get_feed
 from logic.users import user_management
@@ -14,7 +13,7 @@ from logic.database.sanity_check.sanity_checker import sanitycheck
 
 generate_tables('testdir', 'sqlite3')
 kwdb = KWDB(base_dir='testdir')
-kwdb.connection = connection(kwdb)
+kwdb.connection = connect(kwdb)
 
 class BasicCase(unittest.TestCase):
     def test_add_user_and_tweets(self):

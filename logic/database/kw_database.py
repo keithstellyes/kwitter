@@ -4,6 +4,7 @@
 
 import json
 import sqlite3
+import os
 
 from logic.shared import uuid as shared_uuid
 from logic.database.unsupported_db_type_exception import UnsupportedDBTypeException
@@ -42,6 +43,8 @@ class KWDB:
 
     # todo rename to metadata_deserialize
     def deserialize(directory):
+        if not directory.endswith(os.sep):
+            directory += os.sep
         blobstr = open(directory + 'metadata.json', 'r').read()
         blob = json.loads(blobstr)
         return KWDB(base_dir=blob['base_dir'], db_filename=blob['db_filename'], db_type=blob['db_type'])
@@ -74,3 +77,10 @@ class KWDB:
             self.connection.commit()
         else:
             raise UnsupportedDBTypeException(self.db_type)
+
+def connect(kwdb):
+    if kwdb.db_type == 'sqlite3':
+        import sqlite3
+        conn = sqlite3.connect(kwdb.db_filepath())
+        kwdb.connection = conn
+        return conn
