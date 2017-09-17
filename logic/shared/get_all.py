@@ -95,6 +95,6 @@ def get_all_tweets_of_user_by_username(kwdb, username):
 def get_all_tweets_of_user_by_username_sqlite3(kwdb, username):
     script = read_db_script(['tweets', 'get-tweets-by-username.sql'])
     rows = kwdb.cursor().execute(script, (username,)).fetchall()
-    return [tweet.Tweet(tweet_id=row[0],
+    return [tweet.Tweet(user_handle=row[0],
                         content=row[1],
                         timestamp=row[2]) for row in rows]

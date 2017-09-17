@@ -4,7 +4,7 @@ import os
 kw_globals.SCRIPT_BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 from flask import Flask
-from server.api import user_stream, tag_stream
+from server.api import user_stream, tag_stream, user_feed
 from logic.database.kw_database import KWDB, connect
 
 import json
@@ -29,6 +29,11 @@ def stream_tag(tag_field):
     return tag_stream.tag_stream_as_json(tag_field=tag_field,
                                          kwdb=kwdb)
 
+@app.route('/feed/<username>')
+def stream_user_feed(username):
+    return user_feed.user_feed_as_json(username=username,
+                                       kwdb=kwdb)
+
 if __name__ == "__main__":
-    app.run(host=settings['db_path'],
+    app.run(host=settings['host'],
             port=settings['port'])

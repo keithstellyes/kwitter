@@ -55,17 +55,15 @@ class BasicCase(unittest.TestCase):
         follower = FollowerRelation(followee_id=1, follower_id=10)
         kwdb.add(follower)
         feed = get_feed.get_feed_for_user_by_user_id(kwdb=kwdb, user_id=user_kevin.user_id)
-        self.assertEqual(len(feed), 3)
-        feed_index = 0
-        expected_tweet_index = 2
-        while expected_tweet_index >= 0:
-            expect = tweets[expected_tweet_index]
-            actual = feed[feed_index]
-            self.assertEqual(actual.user_handle, 'keith')
-            self.assertEqual(actual.content, expect.content)
 
-            expected_tweet_index -= 1
-            feed_index += 1
+        tweetcontents = sorted([tweet.content for tweet in feed])
+        feedcontents = sorted([tweet.content for tweet in tweets])
+        self.assertEqual(tweetcontents, feedcontents)
+
+        tweetids = sorted(tweet.tweet_id for tweet in tweets)
+        feedids = sorted(tweet.tweet_id for tweet in feed)
+        self.assertEqual(tweetids, feedids)
+
         feed = get_feed.get_feed_for_user_by_user_id(kwdb=kwdb, user_id=user_keith.user_id)
         self.assertEqual(len(feed), 0)
 

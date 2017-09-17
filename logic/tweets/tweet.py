@@ -74,6 +74,8 @@ class Tweet:
         resultdict['tweet_id'] = self.tweet_id
         if self.user_id is not None:
             resultdict['user_id'] = self.user_id
+        if self.user_handle is not None:
+            resultdict['user_handle'] = self.user_handle
         if self.tags is not None:
             resultdict['tags'] = [tag.field for tag in self.tags]
         resultdict['content'] = self.content

@@ -1,5 +1,5 @@
 -- get the tweet content and timestamp, dropping the ID information
-select HANDLE,CONTENT,TIMESTAMP from (
+select HANDLE, CONTENT, TIMESTAMP, TWEET_ID from (
 -- get the handles for all those ID's
     select HANDLE, FOLLOWEE_ID from (
 -- get the ID's of all followers

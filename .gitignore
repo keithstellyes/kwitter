@@ -99,3 +99,7 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# kwitter-specific
+tests/logic/database/testdir/kw.db
+api_server_settings.json
