@@ -86,6 +86,32 @@ def get_all_followees_of_user_sqlite3(kwdb, user):
     return [tweeter_user.TweeterUser(handle=row[0],
                                      user_id=row[1]) for row in rows]
 
+def get_all_followees_of_user_by_username(kwdb, username):
+    if kwdb.db_type == 'sqlite3':
+        return get_all_followees_of_user_by_username_sqlite3(kwdb=kwdb,
+                                                             username=username)
+    else:
+        raise UnsupportedDBTypeException(kwdb.db_type)
+
+def get_all_followees_of_user_by_username_sqlite3(kwdb, username):
+    script = read_db_script(['followers', 'get-followees-by-followerhandle.sql'])
+    rows = kwdb.cursor().execute(script, (username,))
+    return [tweeter_user.TweeterUser(handle=row[0],
+                                     user_id=row[1]) for row in rows]
+
+def get_all_followers_of_user_by_username(kwdb, username):
+    if kwdb.db_type == 'sqlite3':
+        return get_all_followers_of_user_by_username_sqlite3(kwdb=kwdb,
+                                                             username=username)
+    else:
+        raise UnsupportedDBTypeException(kwdb.db_type)
+
+def get_all_followers_of_user_by_username_sqlite3(kwdb, username):
+    script = read_db_script(['followers', 'get-followers-by-followeehandle.sql'])
+    rows = kwdb.cursor().execute(script, (username,))
+    return [tweeter_user.TweeterUser(handle=row[0],
+                                     user_id=row[1]) for row in rows]
+
 def get_all_tweets_of_user_by_username(kwdb, username):
     if kwdb.db_type == 'sqlite3':
         return get_all_tweets_of_user_by_username_sqlite3(kwdb, username)

@@ -1,6 +1,8 @@
 from logic.users import user_management
 from logic.database.db_script_getter import read_db_script
 from logic.tweets import tweet as tweet_module
+import json
+
 
 class TweeterUser:
     def __init__(self, user_id=None, handle=None):
@@ -48,3 +50,12 @@ class TweeterUser:
             kwdb.delete(tweet_module.Tweet(tweet_id=tweet_id))
         kwdb.cursor().executescript(delete_user_script)
         kwdb.commit()
+    def __jsonobj__(self):
+        d = {}
+        if self.user_id is not None:
+            d['user_id'] = self.user_id
+        if self.handle is not None:
+            d['handle'] = self.handle
+        return d
+    def __jsonserialize__(self):
+        return json.dumps(self.__jsonobj__())

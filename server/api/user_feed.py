@@ -3,6 +3,7 @@ from logic.users.user_management import get_id_from_username
 
 import json
 
+
 # todo: This ought to be a query that doesn't require the user's ID
 def user_feed_as_json(username, kwdb):
     id = get_id_from_username(kwdb=kwdb, username=username)
