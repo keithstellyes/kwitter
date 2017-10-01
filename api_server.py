@@ -3,7 +3,7 @@ import os
 
 kw_globals.SCRIPT_BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-from flask import Flask
+from flask import Flask, request
 from server.api import user_stream, tag_stream, user_feed, follower_relations
 from server.app_runner import run_app
 from server import settings_loader
@@ -34,13 +34,20 @@ def stream_tag(tag_field):
 
 @app.route('/feed/<username>')
 def stream_user_feed(username):
-    return user_feed.user_feed_as_json(username=username,
+    since = request.args.get('since')
+    if since is None:
+        return user_feed.user_feed_as_json(username=username,
                                        kwdb=kwdb)
+    else:
+        return user_feed.user_feed_as_json_since(kwdb=kwdb,
+                                                 username=username,
+                                                 since=since)
 
 @app.route('/followers/<username>')
 def get_followers_by_username(username):
     return follower_relations.get_followers_as_json(username=username,
                                                     kwdb=kwdb)
+
 
 @app.route('/followees/<username>')
 def get_followees_by_username(username):

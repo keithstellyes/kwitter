@@ -10,3 +10,10 @@ def user_feed_as_json(username, kwdb):
     feed = get_feed.get_feed_for_user_by_user_id(kwdb=kwdb,
                                                  user_id=id)
     return json.dumps([tweet.__jsonobj__() for tweet in feed])
+
+
+def user_feed_as_json_since(username, since, kwdb):
+    feed = get_feed.get_feed_for_user_by_username_since(kwdb=kwdb,
+                                                        username=username,
+                                                        since=since)
+    return json.dumps([tweet.__jsonobj__() for tweet in feed])

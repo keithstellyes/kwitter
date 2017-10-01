@@ -1,5 +1,5 @@
 {
-  "db_path" : "",
-  "host":"",
-  "port":80
+  "db_path" : "/home/Keith",
+  "host":"127.0.0.1",
+  "port":5000
 }
